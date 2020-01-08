@@ -4,10 +4,7 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class TokenUtils {
 
@@ -36,13 +33,13 @@ public class TokenUtils {
         String result = "";
         ScriptEngine engine = new ScriptEngineManager().getEngineByName(ENGINE_NAME);
         try {
-            FileReader reader = new FileReader(jsFile);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(TokenUtils.class.getClassLoader().getResourceAsStream(jsFile)));
             engine.eval(reader);
             if (engine instanceof Invocable) {
                 Invocable invoke = (Invocable) engine;
                 result = String.valueOf(invoke.invokeFunction(FUNCTION_NAME, text, gtk));
             }
-        } catch (ScriptException | NoSuchMethodException | FileNotFoundException e) {
+        } catch (ScriptException | NoSuchMethodException e) {
             // todo:
             e.printStackTrace();
         }
